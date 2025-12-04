@@ -183,7 +183,7 @@ public class GUI {
                 ImGui.Spacing();
                 ImGui.Text("In Debug: Toggle Sprite0 Hit Check. \nTry this out if a game freezes");
                 ImGui.Spacing();
-                ImGui.Text("Only Catridge Mapper ID Supported: \n0, 1, 2, 4");
+                ImGui.Text("Only Catridge Mapper ID Supported: \n0, 1, 2, 4, 30");
 
                 if (ImGui.Button("Close")) {
                     showManualWindow = false;

@@ -72,6 +72,9 @@ public class Cartridge {
             case 4:
                 mapper = new Mapper4(this);
                 break;
+            case 30:
+                mapper = new Mapper30(this);
+                break;
             default:
                 Console.WriteLine("Mapper " + mapperID + " is not supported");
                 Environment.Exit(1);
