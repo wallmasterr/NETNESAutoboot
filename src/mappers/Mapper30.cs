@@ -1,13 +1,11 @@
 public class Mapper30 : IMapper { //UNROM 512
     private Cartridge cartridge;
     private byte prgBank;
-    private bool mirrorVertical;
 
     public Mapper30(Cartridge cart) {
         cartridge = cart;
         prgBank = 0;
         // Always start with vertical mirroring
-        mirrorVertical = true;
         // Set initial mirroring
         cartridge.SetMirroring(Mirroring.Vertical);
     }
@@ -15,7 +13,6 @@ public class Mapper30 : IMapper { //UNROM 512
     public void Reset() {
         prgBank = 0;
         // Always reset to vertical mirroring
-        mirrorVertical = true;
         cartridge.SetMirroring(Mirroring.Vertical);
     }
 

@@ -6,6 +6,7 @@ publish/
 
 extra/
 test/v1/
+.vs/
 
 *.bin
 *.nes

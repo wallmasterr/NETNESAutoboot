@@ -56,6 +56,10 @@ public class GUI {
             if (Helper.romPath.Length != 0 && Helper.insertingRom == false) {
                 nes.Run();
             } else if (Helper.insertingRom == true) {
+                // Cleanup old NES instance if it exists
+                if (nes != null) {
+                    nes.Cleanup();
+                }
                 nes = new NES();
                 Helper.insertingRom = false;
             } else {
@@ -69,6 +73,11 @@ public class GUI {
 
             rlImGui.End();
             Raylib.EndDrawing();
+        }
+
+        // Cleanup NES and audio
+        if (nes != null) {
+            nes.Cleanup();
         }
 
         Raylib.CloseWindow();
