@@ -6,13 +6,17 @@ public class Mapper30 : IMapper { //UNROM 512
     public Mapper30(Cartridge cart) {
         cartridge = cart;
         prgBank = 0;
-        mirrorVertical = false;
+        // Always start with vertical mirroring
+        mirrorVertical = true;
+        // Set initial mirroring
+        cartridge.SetMirroring(Mirroring.Vertical);
     }
 
     public void Reset() {
         prgBank = 0;
-        mirrorVertical = false;
-        cartridge.SetMirroring(Mirroring.Horizontal);
+        // Always reset to vertical mirroring
+        mirrorVertical = true;
+        cartridge.SetMirroring(Mirroring.Vertical);
     }
 
     public byte CPURead(ushort addr) {
@@ -36,12 +40,13 @@ public class Mapper30 : IMapper { //UNROM 512
             // Lower 5 bits select PRG bank (0-31, supports up to 512KB)
             prgBank = (byte)(val & 0x1F);
             
-            // Bit 6 controls mirroring (0 = horizontal, 1 = vertical)
-            bool newMirrorVertical = (val & 0x40) != 0;
-            if (newMirrorVertical != mirrorVertical) {
-                mirrorVertical = newMirrorVertical;
-                cartridge.SetMirroring(mirrorVertical ? Mirroring.Vertical : Mirroring.Horizontal);
-            }
+            // Bit 6 controls mirroring (0 = vertical, 1 = horizontal)
+            // Always keep vertical mirroring for this game
+            // bool newMirrorVertical = (val & 0x40) == 0;
+            // if (newMirrorVertical != mirrorVertical) {
+            //     mirrorVertical = newMirrorVertical;
+            //     cartridge.SetMirroring(mirrorVertical ? Mirroring.Vertical : Mirroring.Horizontal);
+            // }
         }
     }
 
@@ -49,10 +54,15 @@ public class Mapper30 : IMapper { //UNROM 512
         if (addr < 0x2000) {
             if (cartridge.chrBanks == 0) {
                 // CHR RAM
-                return cartridge.chrRAM[addr];
+                if (addr < cartridge.chrRAM.Length) {
+                    return cartridge.chrRAM[addr];
+                }
+                return 0;
             }
             // CHR ROM (up to 256KB, 32 banks of 8KB)
-            return cartridge.chrROM[addr % cartridge.chrROM.Length];
+            if (cartridge.chrROM.Length > 0) {
+                return cartridge.chrROM[addr % cartridge.chrROM.Length];
+            }
         }
         return 0;
     }
@@ -60,7 +70,9 @@ public class Mapper30 : IMapper { //UNROM 512
     public void PPUWrite(ushort addr, byte val) {
         if (cartridge.chrBanks == 0 && addr < 0x2000) {
             // CHR RAM
-            cartridge.chrRAM[addr] = val;
+            if (addr < cartridge.chrRAM.Length) {
+                cartridge.chrRAM[addr] = val;
+            }
         }
     }
 }
